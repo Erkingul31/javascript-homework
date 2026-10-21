@@ -21,13 +21,13 @@ const setRandomColors = () => {
     })
 }
 
-window.onload = () => setRandomColors()
-window.onkeydown = (event) => {
+window.addEventListener('load', setRandomColors)
+window.addEventListener('keydown', (event) => {
     if (event.code.toLowerCase() === 'space') {
         event.preventDefault()
         setRandomColors()
     }
-}
+})
 
 // SLIDER BLOCK
 
