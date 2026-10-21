@@ -31,47 +31,58 @@ window.onkeydown = (event) => {
 
 // SLIDER BLOCK
 
+
 const slides = document.querySelectorAll('.slide')
 const next = document.querySelector('#next')
 const prev = document.querySelector('#prev')
-let index = 0
 
-const hideSlide = () => {
+let index = 0
+let sliderInterval = null
+
+const hideSlides = () => {
     slides.forEach((slide) => {
         slide.style.opacity = 0
         slide.classList.remove('active_slide')
     })
 }
-const showSlide = (i = 0) => {
+
+const showSlide = (i) => {
+    hideSlides()
     slides[i].style.opacity = 1
     slides[i].classList.add('active_slide')
+    index = i
 }
 
-hideSlide()
-showSlide(index)
-
-
-const autoSlider = (i = 0) => {
-    setInterval(() => {
-        i++
-        if (i > slides.length - 1) {
-            i = 0
-        }
-        hideSlide()
-        showSlide(i)
-    }, 10000)
+const nextSlide = () => {
+    const nextIndex = (index + 1) % slides.length
+    showSlide(nextIndex)
 }
 
-next.onclick = () => {
-    index < slides.length - 1 ? index++ : index = 0
-    hideSlide()
-    showSlide(index)
+const prevSlide = () => {
+    const prevIndex = (index - 1 + slides.length) % slides.length
+    showSlide(prevIndex)
 }
 
-prev.onclick = () => {
-    index > 0 ? index-- : index = slides.length - 1
-    hideSlide()
-    showSlide(index)
+const startAutoSlider = () => {
+    clearInterval(sliderInterval)
+
+    sliderInterval = setInterval(() => {
+        nextSlide()
+    }, 5000)
 }
 
-autoSlider(index)
+if (slides.length > 0 && next && prev) {
+    showSlide(0)
+
+    next.onclick = () => {
+        nextSlide()
+        startAutoSlider()
+    }
+
+    prev.onclick = () => {
+        prevSlide()
+        startAutoSlider()
+    }
+
+    startAutoSlider()
+}
