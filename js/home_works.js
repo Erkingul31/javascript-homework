@@ -108,3 +108,131 @@ if (secondsDisplay && startButton && stopButton && resetButton) {
 
     updateSeconds()
 }
+
+function delay(value, ms, shouldFail = false) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            if (shouldFail) {
+                reject(new Error(`Ошибка при обработке: ${value}`))
+            } else {
+                resolve(value)
+            }
+        }, ms)
+    })
+}
+
+function runThenCatchChain() {
+    delay(1, 500)
+        .then((value) => {
+            console.log('Первый результат:', value)
+            return delay(value + 1, 500, true)
+        })
+        .then((value) => {
+            console.log('Второй результат:', value)
+            return delay(value + 1, 500)
+        })
+        .then((value) => {
+            console.log('Третий результат:', value)
+        })
+        .catch((error) => {
+            console.log('Ошибка цепочки:', error.message)
+        })
+        .finally(() => {
+            console.log('Цепочка завершена')
+        })
+}
+
+async function runAsyncAwaitChain() {
+    try {
+        const first = await delay(1, 500)
+        console.log('Async/Await — первый результат:', first)
+
+        const second = await delay(first + 1, 500, true)
+        console.log('Async/Await — второй результат:', second)
+
+        const third = await delay(second + 1, 500)
+        console.log('Async/Await — третий результат:', third)
+    } catch (error) {
+        console.log('Async/Await — ошибка:', error.message)
+    } finally {
+        console.log('Async/Await — выполнение завершено')
+    }
+}
+
+async function processArraySafely() {
+    const numbers = [10, 20, 30, 40]
+    const results = []
+
+    for (const value of numbers) {
+        try {
+            const result = await delay(value, 500, Math.random() > 0.7)
+
+            results.push({
+                value: result,
+                error: null
+            })
+        } catch (error) {
+            results.push({
+                value: value,
+                error: error.message
+            })
+        }
+    }
+
+    console.log('Результаты обработки массива:', results)
+}
+
+async function runParallelTasks() {
+    const tasks = [
+        delay('Задача 1', 500),
+        delay('Задача 2', 700, true),
+        delay('Задача 3', 1000),
+        delay('Задача 4', 1200)
+    ]
+
+    try {
+        const results = await Promise.all(tasks)
+        console.log('Promise.all:', results)
+    } catch (error) {
+        console.log('Promise.all — ошибка:', error.message)
+    }
+
+    const settledTasks = [
+        delay('Первый результат', 500),
+        delay('Вторая задача', 700, true),
+        delay('Третий результат', 1000),
+        delay('Четвёртая задача', 1200, true)
+    ]
+
+    const settledResults = await Promise.allSettled(settledTasks)
+
+    const succeeded = settledResults
+        .filter((item) => item.status === 'fulfilled')
+        .map((item) => item.value)
+
+    const failed = settledResults
+        .filter((item) => item.status === 'rejected')
+        .map((item) => item.reason.message)
+
+    console.log('Promise.allSettled — успешные:', succeeded)
+    console.log('Promise.allSettled — ошибки:', failed)
+
+    const dataPromise = delay('Данные получены', 2000)
+    const timeoutPromise = delay('Таймаут истёк!', 500, true)
+
+    try {
+        const result = await Promise.race([
+            dataPromise,
+            timeoutPromise
+        ])
+
+        console.log('Promise.race:', result)
+    } catch (error) {
+        console.log('Promise.race — ошибка:', error.message)
+    }
+}
+
+runThenCatchChain()
+runAsyncAwaitChain()
+processArraySafely()
+runParallelTasks()
