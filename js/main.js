@@ -1,36 +1,54 @@
-// RANDOM COLOR GENERATOR
+
+ // RANDOM COLOR GENERATOR
 
 const buttonsColor = document.querySelectorAll('.btn-color')
 const javaScript = document.querySelector('#js-color')
 
 const generateRandomColor = () => {
     const hexCodes = '0123456789ABCDEF'
-    let color = ''
+    let color = '#'
+
     for (let i = 0; i < 6; i++) {
         color += hexCodes[Math.floor(Math.random() * hexCodes.length)]
     }
-    return '#' + color
+
+    return color
 }
 
 const setRandomColors = () => {
     buttonsColor.forEach((buttonColor) => {
-        buttonColor.innerHTML = generateRandomColor()
-        buttonColor.onclick = (event) => {
-            javaScript.style.color = event.target.innerHTML
+        const color = generateRandomColor()
+
+        buttonColor.textContent = color
+
+        buttonColor.onclick = () => {
+            if (javaScript) {
+                javaScript.style.color = color
+            }
         }
     })
 }
 
 window.addEventListener('load', setRandomColors)
+
 window.addEventListener('keydown', (event) => {
-    if (event.code.toLowerCase() === 'space') {
+    const activeElement = document.activeElement
+    const isTyping =
+        activeElement &&
+        (
+            activeElement.tagName === 'INPUT' ||
+            activeElement.tagName === 'TEXTAREA' ||
+            activeElement.isContentEditable
+        )
+
+    if (event.code === 'Space' && !isTyping) {
         event.preventDefault()
         setRandomColors()
     }
 })
 
-// SLIDER BLOCK
 
+// SLIDER BLOCK
 
 const slides = document.querySelectorAll('.slide')
 const next = document.querySelector('#next')
@@ -41,47 +59,55 @@ let sliderInterval = null
 
 const hideSlides = () => {
     slides.forEach((slide) => {
-        slide.style.opacity = 0
+        slide.style.opacity = '0'
         slide.classList.remove('active_slide')
     })
 }
 
 const showSlide = (i) => {
+    if (slides.length === 0) return
+
+    index = ((i % slides.length) + slides.length) % slides.length
+
     hideSlides()
-    slides[i].style.opacity = 1
-    slides[i].classList.add('active_slide')
-    index = i
+
+    slides[index].style.opacity = '1'
+    slides[index].classList.add('active_slide')
 }
 
 const nextSlide = () => {
-    const nextIndex = (index + 1) % slides.length
-    showSlide(nextIndex)
+    showSlide(index + 1)
 }
 
 const prevSlide = () => {
-    const prevIndex = (index - 1 + slides.length) % slides.length
-    showSlide(prevIndex)
+    showSlide(index - 1)
 }
 
 const startAutoSlider = () => {
     clearInterval(sliderInterval)
 
-    sliderInterval = setInterval(() => {
-        nextSlide()
-    }, 5000)
+    if (slides.length > 1) {
+        sliderInterval = setInterval(() => {
+            nextSlide()
+        }, 5000)
+    }
 }
 
-if (slides.length > 0 && next && prev) {
+if (slides.length > 0) {
     showSlide(0)
 
-    next.onclick = () => {
-        nextSlide()
-        startAutoSlider()
+    if (next) {
+        next.addEventListener('click', () => {
+            nextSlide()
+            startAutoSlider()
+        })
     }
 
-    prev.onclick = () => {
-        prevSlide()
-        startAutoSlider()
+    if (prev) {
+        prev.addEventListener('click', () => {
+            prevSlide()
+            startAutoSlider()
+        })
     }
 
     startAutoSlider()

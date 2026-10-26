@@ -1,7 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Works</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/core.css">
@@ -61,7 +63,7 @@
 
     <div class="stopwatch">
         <div class="container">
-            <h3>Homework 2 </h3>
+            <h3>Homework 2</h3>
             <div class="time">
                 <div class="time_block">
                     <div class="interval" id="seconds">0</div>
@@ -77,9 +79,8 @@
 
     <div class="characters">
         <div class="container">
-            <div class="characters-list">
-
-            </div>
+            <h3>Characters</h3>
+            <div class="characters-list" id="characters-container"></div>
         </div>
     </div>
 
@@ -104,7 +105,7 @@
                     <input required placeholder="Ваше имя" name="name" type="text" class="modal_input">
                 </label>
                 <label>
-                    <input required placeholder="Ваш номер телефона" name="phone" class="modal_input">
+                    <input required placeholder="Ваш номер телефона" name="phone" type="tel" class="modal_input">
                 </label>
                 <button class="btn btn_dark btn_min">Перезвонить мне</button>
             </form>
@@ -112,7 +113,7 @@
     </div>
 </div>
 
-</body>
 <script src="../js/home_works.js"></script>
 <script src="../js/modal.js"></script>
+</body>
 </html>

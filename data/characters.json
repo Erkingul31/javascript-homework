@@ -1,17 +1,31 @@
+
 [
   {
-    "name": "",
-    "age": 0,
-    "photo": "url"
+    "id": 1,
+    "name": "Jungkook",
+    "age": 29,
+    "country": "South Korea",
+    "person_photo": "https://bighitsmusic.com/assets/images/bts/members/jungkook.jpg"
   },
   {
-    "name": "",
-    "age": 0,
-    "photo": "url"
+    "id": 2,
+    "name": "Taehyung",
+    "age": 30,
+    "country": "South Korea",
+    "person_photo": "https://bighitsmusic.com/assets/images/bts/members/v.jpg"
   },
   {
-    "name": "",
-    "age": 0,
-    "photo": "url"
+    "id": 3,
+    "name": "Jimin",
+    "age": 31,
+    "country": "South Korea",
+    "person_photo": "https://bighitsmusic.com/assets/images/bts/members/jimin.jpg"
+  },
+  {
+    "id": 4,
+    "name": "Namjoon",
+    "age": 32,
+    "country": "South Korea",
+    "person_photo": "https://bighitsmusic.com/assets/images/bts/members/rm.jpg"
   }
 ]
