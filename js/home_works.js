@@ -6,7 +6,7 @@ const gmailResult = document.querySelector('#gmail_result');
 const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
 
 if (gmailInput && gmailButton && gmailResult) {
-    gmailButton.onclick = () => {
+    gmailButton.addEventListener('click', () => {
         if (gmailRegex.test(gmailInput.value.trim())) {
             gmailResult.textContent = 'Gmail корректный';
             gmailResult.style.color = 'green';
@@ -14,7 +14,7 @@ if (gmailInput && gmailButton && gmailResult) {
             gmailResult.textContent = 'Введите корректный Gmail';
             gmailResult.style.color = 'red';
         }
-    };
+    });
 }
 
 const parentBlock = document.querySelector('.parent_block');
@@ -32,6 +32,7 @@ if (parentBlock && childBlock) {
             0,
             parentBlock.clientWidth - childBlock.offsetWidth
         );
+
         const maxY = Math.max(
             0,
             parentBlock.clientHeight - childBlock.offsetHeight
@@ -114,9 +115,9 @@ if (secondsDisplay && startButton && stopButton && resetButton) {
         updateSeconds();
     };
 
-    startButton.onclick = startStopwatch;
-    stopButton.onclick = stopStopwatch;
-    resetButton.onclick = resetStopwatch;
+    startButton.addEventListener('click', startStopwatch);
+    stopButton.addEventListener('click', stopStopwatch);
+    resetButton.addEventListener('click', resetStopwatch);
 
     updateSeconds();
 }
@@ -177,7 +178,11 @@ async function processArraySafely() {
 
     for (const value of numbers) {
         try {
-            const result = await delay(value, 500, Math.random() > 0.7);
+            const result = await delay(
+                value,
+                500,
+                Math.random() > 0.7
+            );
 
             results.push({
                 value: result,
@@ -185,7 +190,7 @@ async function processArraySafely() {
             });
         } catch (error) {
             results.push({
-                value: value,
+                value,
                 error: error.message
             });
         }
@@ -262,7 +267,9 @@ if (charactersContainer) {
         })
         .then(characters => {
             if (!Array.isArray(characters)) {
-                throw new Error('Файл characters.json должен содержать массив');
+                throw new Error(
+                    'Файл characters.json должен содержать массив'
+                );
             }
 
             charactersContainer.innerHTML = '';
@@ -300,4 +307,150 @@ if (charactersContainer) {
             charactersContainer.textContent =
                 'Не удалось загрузить персонажей.';
         });
+}
+
+/* Новое задание: регистрация и отправка данных */
+
+const postForm = document.querySelector('#post-form');
+
+if (postForm) {
+    const consent = document.querySelector('#user-consent');
+    const message = document.querySelector('#form-message');
+    const jsonButton = document.querySelector('#send-json');
+    const formDataButton = document.querySelector('#send-form-data');
+
+    const apiUrl = 'https://jsonplaceholder.typicode.com/posts';
+
+    let isSending = false;
+
+    function validateForm() {
+        message.textContent = '';
+
+        if (!consent || !consent.checked) {
+            message.textContent =
+                'Ошибка: необходимо согласиться на обработку данных.';
+            return false;
+        }
+
+        const ageValue = postForm.elements.age.value.trim();
+        const age = Number(ageValue);
+
+        if (
+            ageValue === '' ||
+            !Number.isInteger(age) ||
+            age < 18
+        ) {
+            message.textContent =
+                'Ошибка: возраст должен быть целым числом не меньше 18.';
+            return false;
+        }
+
+        if (!postForm.checkValidity()) {
+            postForm.reportValidity();
+            message.textContent =
+                'Ошибка: проверьте заполнение всех полей.';
+            return false;
+        }
+
+        return true;
+    }
+
+    async function sendData(useJson) {
+        if (isSending || !validateForm()) {
+            return;
+        }
+
+        isSending = true;
+
+        if (jsonButton) jsonButton.disabled = true;
+        if (formDataButton) formDataButton.disabled = true;
+
+        message.textContent = 'Отправка данных...';
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => {
+            controller.abort();
+        }, 15000);
+
+        try {
+            const formData = new FormData(postForm);
+
+            let body;
+            const headers = {};
+
+            if (useJson) {
+                const data = {
+                    name: formData.get('name').trim(),
+                    email: formData.get('email').trim(),
+                    password: formData.get('password'),
+                    age: Number(formData.get('age')),
+                    gender: formData.get('gender'),
+                    consent: consent.checked
+                };
+
+                body = JSON.stringify(data);
+                headers['Content-Type'] = 'application/json';
+            } else {
+                body = formData;
+            }
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers,
+                body,
+                signal: controller.signal
+            });
+
+            if (!response.ok) {
+                throw new Error(`Ошибка сервера: ${response.status}`);
+            }
+
+            const responseText = await response.text();
+
+            if (!responseText) {
+                throw new Error('Сервер вернул пустой ответ.');
+            }
+
+            let result;
+
+            try {
+                result = JSON.parse(responseText);
+            } catch {
+                throw new Error('Сервер вернул некорректный JSON.');
+            }
+
+            if (!result || typeof result !== 'object') {
+                throw new Error('Неожиданный формат ответа сервера.');
+            }
+
+            message.textContent =
+                `${useJson ? 'JSON' : 'FormData'}: запрос выполнен успешно. ` +
+                `ID записи: ${result.id ?? 'не указан'}`;
+
+            console.log('Запрос выполнен успешно.');
+        } catch (error) {
+            if (error.name === 'AbortError') {
+                message.textContent =
+                    'Ошибка: превышено время ожидания.';
+            } else if (error instanceof TypeError) {
+                message.textContent =
+                    'Ошибка сети. Проверь интернет и доступность сервера.';
+            } else {
+                message.textContent = `Ошибка: ${error.message}`;
+            }
+
+            console.error('Ошибка POST-запроса:', error);
+        } finally {
+            clearTimeout(timeoutId);
+            isSending = false;
+
+            if (jsonButton) jsonButton.disabled = false;
+            if (formDataButton) formDataButton.disabled = false;
+        }
+    }
+
+    if (jsonButton && formDataButton && message) {
+        jsonButton.addEventListener('click', () => sendData(true));
+        formDataButton.addEventListener('click', () => sendData(false));
+    }
 }

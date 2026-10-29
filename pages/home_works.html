@@ -28,7 +28,7 @@
                         <a href="../pages/lessons.html">Lessons</a>
                     </li>
                     <li class="menu_link">
-                        <a href="https://t.me/baked_toastt" target="_blank">Send message</a>
+                        <a href="https://t.me/baked_toastt" target="_blank" rel="noopener noreferrer">Send message</a>
                     </li>
                 </ul>
                 <button class="btn" id="btn-get">Click me!</button>
@@ -86,7 +86,7 @@
 
     <div class="footer">
         <div class="container">
-            <a href="https://www.instagram.com/baked_toastt/" target="_blank">
+            <a href="https://www.instagram.com/baked_toastt/" target="_blank" rel="noopener noreferrer">
                 <div class="inner_footer">
                     <h2>Made by Somebody</h2>
                 </div>
@@ -113,7 +113,42 @@
     </div>
 </div>
 
-<script src="../js/home_works.js"></script>
-<script src="../js/modal.js"></script>
+<section class="registration">
+    <div class="container">
+        <h2>Регистрация пользователя</h2>
+
+        <form id="post-form">
+            <input type="text" name="name" placeholder="Имя" required>
+
+            <input type="email" name="email" placeholder="Email" required>
+
+            <input type="password" name="password" placeholder="Пароль" required>
+
+            <input type="number" name="age" placeholder="Возраст" min="18" step="1" required>
+
+            <select name="gender" required>
+                <option value="">Выберите пол</option>
+                <option value="male">Мужской</option>
+                <option value="female">Женский</option>
+                <option value="other">Другой</option>
+            </select>
+
+            <label>
+                <input type="checkbox" id="user-consent" name="consent" value="yes" required>
+                Согласие на обработку данных
+            </label>
+
+            <button type="button" id="send-json">Отправить JSON</button>
+
+            <button type="button" id="send-form-data">Отправить FormData</button>
+
+            <p id="form-message" role="status" aria-live="polite"></p>
+        </form>
+    </div>
+</section>
+
+<script src="../js/home_works.js" defer></script>
+<script src="../js/modal.js" defer></script>
+
 </body>
 </html>

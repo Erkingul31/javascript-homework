@@ -1,5 +1,4 @@
 
-
 .gmail_block {
     background: black;
     padding: 100px 0;
@@ -25,7 +24,6 @@
     width: 100%;
     margin: 20px 0;
 }
-
 
 .move_block {
     background: black;
@@ -60,8 +58,6 @@
 .inner_move_block {
     margin-top: 50px;
 }
-
-
 
 .clock {
     --clock-size: 360px;
@@ -164,8 +160,6 @@
     transform: translateY(-50%);
 }
 
-
-
 .time {
     color: white;
     display: flex;
@@ -194,8 +188,6 @@
     display: flex;
     justify-content: space-between;
 }
-
-
 
 .characters {
     background: var(--black);
@@ -247,4 +239,121 @@
 .character-card p {
     margin: 8px 0;
     color: #222;
+}
+
+/* Registration form */
+.registration {
+    padding: 100px 0;
+    background: black;
+    color: white;
+}
+
+.registration h2 {
+    margin-bottom: 40px;
+    text-align: center;
+    color: white;
+}
+
+.registration #post-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 500px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 30px;
+    box-sizing: border-box;
+    border: 1px solid var(--orange);
+    border-radius: 20px;
+    background: #111;
+}
+
+.registration #post-form > input,
+.registration #post-form > select {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 15px;
+    box-sizing: border-box;
+    border: 1px solid #444;
+    border-radius: 8px;
+    background: #222;
+    color: white;
+    font: inherit;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.registration #post-form > input::placeholder {
+    color: #aaa;
+}
+
+.registration #post-form > input:focus,
+.registration #post-form > select:focus {
+    border-color: var(--orange);
+    box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.15);
+}
+
+.registration #post-form > select {
+    cursor: pointer;
+}
+
+.registration #post-form > label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    font-size: 14px;
+    line-height: 1.5;
+    cursor: pointer;
+}
+
+.registration #user-consent {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+    accent-color: var(--orange);
+    cursor: pointer;
+}
+
+.registration #post-form > button {
+    width: 100%;
+    min-height: 45px;
+    padding: 12px;
+    border: 1px solid var(--orange);
+    border-radius: 8px;
+    background: var(--orange);
+    color: black;
+    font: inherit;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+
+.registration #post-form > button:hover:not(:disabled) {
+    background: transparent;
+    color: var(--orange);
+    transform: translateY(-2px);
+}
+
+.registration #post-form > button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.registration #form-message {
+    margin: 0;
+    color: white;
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 520px) {
+    .registration {
+        padding: 60px 0;
+    }
+
+    .registration #post-form {
+        padding: 20px;
+    }
 }
